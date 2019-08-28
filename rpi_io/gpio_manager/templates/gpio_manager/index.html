@@ -1,0 +1,64 @@
+{% extends "gpio_manager/base.html" %}
+
+{% block content %}
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% endif %}
+    <form method="POST">
+    <table class="table table-sm">
+    {% for row in rows %}
+        {% with left=row.0 right=row.1 %}
+        <tr>
+           <td>
+                <strong>{{ left.func1 }}</strong>
+                {% if left.color == "red" %}
+                    </td><td rowspan=2 class="table-danger text-center align-middle">
+                {% elif left.color == "yellow" %}
+                    </td><td rowspan=2 class="table-warning text-center align-middle">
+                {% elif left.color == "grey" %}
+                    </td><td rowspan=2 class="table-secondary text-center align-middle">
+                {% elif left.color == "green" %}
+                    </td><td rowspan=2 class="table-success text-center align-middle">
+                {% elif left.color == "blue" %}
+                    </td><td rowspan=2 class="table-info text-center align-middle">
+                {% else  %}
+                    </td><td rowspan=2 class="text-center align-middle">
+                {% endif %}
+                <strong>{{ left.pin }}</strong>
+            {% if right.color == "red" %}
+                    </td><td rowspan=2 class="table-danger text-center align-middle">
+                {% elif right.color == "yellow" %}
+                    </td><td rowspan=2 class="table-warning text-center align-middle">
+                {% elif right.color == "grey" %}
+                    </td><td rowspan=2 class="table-secondary text-center align-middle">
+                {% elif right.color == "green" %}
+                    </td><td rowspan=2 class="table-success text-center align-middle">
+                {% elif right.color == "blue" %}
+                    </td><td rowspan=2 class="table-info text-center align-middle">
+                {% else  %}
+                    </td><td rowspan=2 class="text-center align-middle">
+                {% endif %}
+                <strong>{{ right.pin }}</strong>
+            </td><td class="text-right">
+                <strong>{{ right.func1 }}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {% if left.func2 %}
+                    <small>{{ left.func2 }}</small>
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </td>
+            <td class="text-right">
+                {% if right.func2 %}
+                    <small>{{ right.func2 }}</small>
+                {% endif %}
+            </td>
+        </tr>
+        {% endwith %}
+    {% endfor %}
+    </table>
+    </form>
+{% endblock %}
