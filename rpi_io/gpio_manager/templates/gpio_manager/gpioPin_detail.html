@@ -1,0 +1,40 @@
+{% extends "gpio_manager/base.html" %}
+
+{% block content %}
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% endif %}
+    <table class="table table-sm">
+        {% with left=row.0 right=row.1 %}
+        <tr>
+           <td>
+                <strong>{{ object.func1 }}</strong>
+                {% if object.color == "red" %}
+                    </td><td rowspan=2 class="table-danger text-center align-middle">
+                {% elif object.color == "yellow" %}
+                    </td><td rowspan=2 class="table-warning text-center align-middle">
+                {% elif object.color == "grey" %}
+                    </td><td rowspan=2 class="table-secondary text-center align-middle">
+                {% elif object.color == "green" %}
+                    </td><td rowspan=2 class="table-success text-center align-middle">
+                {% elif object.color == "blue" %}
+                    </td><td rowspan=2 class="table-info text-center align-middle">
+                {% else  %}
+                    </td><td rowspan=2 class="text-center align-middle">
+                {% endif %}
+                <strong>{{ object.pin }}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {% if object.func2 %}
+                    <small>{{ left.func2 }}</small>
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </td>
+        </tr>
+        {% endwith %}
+    </table>
+    <a href="{% url 'gpio_manager-update' object.id %}">Bearbeiten</a>
+{% endblock %}

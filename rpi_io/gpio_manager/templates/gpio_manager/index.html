@@ -1,15 +1,18 @@
 {% extends "gpio_manager/base.html" %}
-
+{% load filters %}
 {% block content %}
     {% if title %}
         <h1>{{ title }}</h1>
     {% endif %}
-    <form method="POST">
     <table class="table table-sm">
     {% for row in rows %}
-        {% with left=row.0 right=row.1 %}
+        {% with left=gpio|pinIndex:row.0 right=gpio|pinIndex:row.1 %}
         <tr>
-           <td>
+            <td>
+                {% if left.connected %}
+                    <small>{{ left.device }} ({{ left.mqtt_alias }})</small>
+                {% endif %}
+            </td><td>
                 <strong>{{ left.func1 }}</strong>
                 {% if left.color == "red" %}
                     </td><td rowspan=2 class="table-danger text-center align-middle">
@@ -24,7 +27,13 @@
                 {% else  %}
                     </td><td rowspan=2 class="text-center align-middle">
                 {% endif %}
-                <strong>{{ left.pin }}</strong>
+                <strong>
+                    {%if left.connectable %}
+                        <a href="{% url 'gpio_manager-detail' left.id %}">{{ left.pin }}</a>
+                    {% else %}
+                        {{ left.pin }}
+                    {% endif %}
+                    </strong>
             {% if right.color == "red" %}
                     </td><td rowspan=2 class="table-danger text-center align-middle">
                 {% elif right.color == "yellow" %}
@@ -38,27 +47,39 @@
                 {% else  %}
                     </td><td rowspan=2 class="text-center align-middle">
                 {% endif %}
-                <strong>{{ right.pin }}</strong>
+                <strong>
+                    {%if right.connectable %}
+                        <a href="{% url 'gpio_manager-detail' right.id %}">{{ right.pin }}</a>
+                    {% else %}
+                        {{ right.pin }}
+                    {% endif %}
+                </strong>
             </td><td class="text-right">
                 <strong>{{ right.func1 }}</strong>
+            </td><td class="text-right">
+                {% if right.connected %}
+                    <small>{{ right.device }} ({{ right.mqtt_alias }})</small>
+                {% endif %}
             </td>
         </tr>
         <tr>
             <td>
+                <small></small>
+            </td><td>
                 {% if left.func2 %}
                     <small>{{ left.func2 }}</small>
                 {% else %}
                     &nbsp;
                 {% endif %}
-            </td>
-            <td class="text-right">
+            </td><td class="text-right">
                 {% if right.func2 %}
                     <small>{{ right.func2 }}</small>
                 {% endif %}
+            </td><td class="text-right">
+                <small></small>
             </td>
         </tr>
         {% endwith %}
     {% endfor %}
     </table>
-    </form>
 {% endblock %}
