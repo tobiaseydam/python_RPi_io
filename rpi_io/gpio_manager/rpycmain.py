@@ -80,12 +80,13 @@ try:
     i = 0
     while True:
         i+=1
-        for s in sensorList:
+        for s in list(sensorList.keys()):
                 sens = sensorList[s]
-                hum, temp = Adafruit_DHT.read_retry(sens["sensor"], sens["pin"])
-                data = {"humidity": hum, "temperature": temp}
-                mqtt_client.publish(sens["topic"], json.dumps(data))
-                print("{} - Hum: {:.2f} % / Temp: {:.2f} °C".format(sens["topic"], hum, temp))
+                hum, temp = Adafruit_DHT.read_retry(sens["sensor"], sens["pin"], retries=2)
+                if hum is not None and temp is not None:    
+                    data = {"humidity": hum, "temperature": temp}
+                    mqtt_client.publish(sens["topic"], json.dumps(data))
+                    print("{} - Hum: {:.2f} % / Temp: {:.2f} °C".format(sens["topic"], hum, temp))
         time.sleep(interval)
         
 except Exception as e:
